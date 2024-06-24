@@ -12,6 +12,7 @@ let fields = [
 
 
 currentPlayer = 0;
+gameIsFinished = false;
 
 
 function init() {
@@ -31,35 +32,40 @@ function renderTICTACTOE() {
 
 
 function choosePlayer1Cross() {
-    currentPlayer = 1;
-    document.getElementById('choosePlayerText').innerHTML = '';
-    document.getElementById('chooseCross').classList.add('ChoosePlayerdropfilterBoxshadow');
-    document.getElementById('chooseCircle').classList.remove('ChoosePlayerdropfilterBoxshadow');
-    document.getElementById('choosePlayerText').innerHTML = 'Spieler Kreuz ist am Zug'
+    if ((gameIsFinished == false && currentPlayer == 0)) {
+        currentPlayer = 1;
+        document.getElementById('chooseCross').classList.add('ChoosePlayerdropfilterBoxshadow');
+        document.getElementById('chooseCircle').classList.remove('ChoosePlayerdropfilterBoxshadow');
+        document.getElementById('choosePlayerText').innerHTML = 'Spieler Kreuz ist am Zug';
+    }
 }
-
 
 function choosePlayer2Circle() {
-    currentPlayer = 2;
-    document.getElementById('choosePlayerText').innerHTML = '';
-    document.getElementById('chooseCircle').classList.add('ChoosePlayerdropfilterBoxshadow');
-    document.getElementById('chooseCross').classList.remove('ChoosePlayerdropfilterBoxshadow');
-    document.getElementById('choosePlayerText').innerHTML = 'Spieler Kreis ist am Zug'
+    if ((gameIsFinished == false && currentPlayer == 0)) {
+        currentPlayer = 2;
+        document.getElementById('chooseCircle').classList.add('ChoosePlayerdropfilterBoxshadow');
+        document.getElementById('chooseCross').classList.remove('ChoosePlayerdropfilterBoxshadow');
+        document.getElementById('choosePlayerText').innerHTML = 'Spieler Kreis ist am Zug';
+    }
 }
+
 
 function setField(feld) {
     if (noCurrentPlayer()) {
         alert('Spieler auswählen')
     } else if (fieldIsTaken(feld)) {
         alert('Feld bereits vergeben');
+    } else if (gameIsFinished == true) {
+        alert('Spiel ist vorbei. Bitte neu starten')
     } else if (player1CrossIsChosen() && fieldIsEmpty(feld)) {
         document.getElementById(`field${feld}`).innerHTML = crossHTML();
         fields[feld] = 1;
+        currentPlayer = 0;
         choosePlayer2Circle();
-    }
-    else if (player2CircleIsChosen() && fieldIsEmpty(feld)) {
+    } else if (player2CircleIsChosen() && fieldIsEmpty(feld)) {
         document.getElementById(`field${feld}`).innerHTML = circleHTML();
         fields[feld] = 4;
+        currentPlayer = 0;
         choosePlayer1Cross();
     }
     searchForWinner();
@@ -90,6 +96,7 @@ function fieldIsEmpty(feld) {
     return fields[feld] == 0
 }
 
+
 function searchForWinner() {
     if (
         (fields[0] + fields[1] + fields[2] == 3) ||
@@ -100,7 +107,10 @@ function searchForWinner() {
         (fields[2] + fields[5] + fields[8] == 3) ||
         (fields[0] + fields[4] + fields[8] == 3) ||
         (fields[2] + fields[4] + fields[6] == 3)
-    ) { document.getElementById('choosePlayerText').innerHTML = 'Spieler Kreuz hat gewonnen!' }
+    ) {
+        document.getElementById('choosePlayerText').innerHTML = 'Spieler Kreuz hat gewonnen!';
+        gameIsFinished = true;
+    }
     else if (
         (fields[0] + fields[1] + fields[2] == 12) ||
         (fields[3] + fields[4] + fields[5] == 12) ||
@@ -110,21 +120,26 @@ function searchForWinner() {
         (fields[2] + fields[5] + fields[8] == 12) ||
         (fields[0] + fields[4] + fields[8] == 12) ||
         (fields[2] + fields[4] + fields[6] == 12)
-    ) { document.getElementById('choosePlayerText').innerHTML = 'Spieler Kreis hat gewonnen!' }
+    ) {
+        document.getElementById('choosePlayerText').innerHTML = 'Spieler Kreis hat gewonnen!'
+        gameIsFinished = true;
+    }
 }
+
 
 function newGame() {
     currentPlayer = 0;
+    gameIsFinished = false;
     fields = [0, 0, 0, 0, 0, 0, 0, 0, 0];
     document.getElementById('chooseCircle').classList.remove('ChoosePlayerdropfilterBoxshadow');
     document.getElementById('chooseCross').classList.remove('ChoosePlayerdropfilterBoxshadow');
     document.getElementById('choosePlayerText').innerHTML = 'Bitte Spieler auswählen';
     renderTICTACTOE();
-
 }
 
 
 //---------------------HTML----------------------------------
+
 
 function crossHTML() {
     return `

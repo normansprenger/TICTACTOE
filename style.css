@@ -8,9 +8,11 @@ body {
     color: white;
     margin: 0;
 }
-h1{
+
+h1 {
     font-size: 52px;
     margin-bottom: 20px;
+    filter: drop-shadow(0 10px 10px black);
 }
 
 .field {
